@@ -1,3 +1,4 @@
 import "./style.css"
 import { Header } from './components/header/header'
-document.getElementById("app").append(Header())
+import { Main } from "./components/main/showTask"
+document.getElementById("app").append(Header(),Main())
