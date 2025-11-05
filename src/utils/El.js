@@ -1,10 +1,10 @@
-/**
- * @param {Object} config
- * @param {keyof HTMLElementTagNameMap} config.element - HTML element tag
- * @param {string} [config.className] - CSS classes
- * @param {string} [config.src] - File path for images/videos
- * @param {string} [config.href] - URL for links
- */
+// /**
+//  * @param {Object} config
+//  * @param {keyof HTMLElementTagNameMap} config.element - HTML element tag
+//  * @param {string} [config.className] - CSS classes
+//  * @param {string} [config.src] - File path for images/videos
+//  * @param {string} [config.href] - URL for links
+//  */
 export function El({
   element,
   children,
