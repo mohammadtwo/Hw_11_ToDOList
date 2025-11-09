@@ -107,7 +107,7 @@ export function Header() {
               El({
                 element: "div",
                 className:
-                  "absolute moduleC h-50 w-[250px] bg-[#6200ea] hidden  grid place-items-center overflow-auto gap-2 p-4  overflow-x-scroll top-full right-0 rounded-b-xl lg:w-[500px]",
+                  "absolute moduleC h-50 w-[250px] bg-[#6200ea] hidden  grid place-items-center overflow-auto gap-2 p-4   top-full right-0 rounded-b-xl lg:w-[500px]",
                 children: arrFilter.map((item) => {
                   return El({
                     element: "div",
@@ -263,12 +263,15 @@ function mould() {
                 element: "button",
                 innerText: "submit",
                 type: "submit",
+                id:"btnSubmit",
                 className:
                   "p-2 bg-[#7926ed] rounded-md text-2xl text-white cursor-pointer w-full max-w-[70%]",
-                eventListener:[{
-                  event:"click",
-                  callback:handleSubmit
-                }]
+                eventListener: [
+                  {
+                    event: "click",
+                    callback: handleSubmit,
+                  },
+                ],
               }),
             ],
           }),
@@ -276,14 +279,13 @@ function mould() {
       }),
     ],
   });
-  
 }
-function showModuleSelectBox(e){
+function showModuleSelectBox(e) {
   e.stopPropagation();
   const parent = e.target.closest(".moduleP");
   const child = parent.querySelector(".moduleC");
 
-  child.classList.toggle("hidden"); 
+  child.classList.toggle("hidden");
 
   const onClickOutside = (ev) => {
     if (child.contains(ev.target) || !parent.contains(ev.target)) {
@@ -292,69 +294,72 @@ function showModuleSelectBox(e){
     }
   };
 
-
-    document.addEventListener("click", onClickOutside);
-  
+  document.addEventListener("click", onClickOutside);
 }
-function showModuleSearch(e){
-    e.stopPropagation();
-  const parent=e.target.closest(".moduleP")
-  const child=parent.querySelector(".moduleC")
-  child.classList.toggle("hidden")
-  const onClickOutside=(ev)=>{
-    if(!child.contains(ev.target)){
-      child.classList.add("hidden")
-      document.removeEventListener("click",onClickOutside);
+function showModuleSearch(e) {
+  e.stopPropagation();
+  const parent = e.target.closest(".moduleP");
+  const child = parent.querySelector(".moduleC");
+  child.classList.toggle("hidden");
+  const onClickOutside = (ev) => {
+    if (!child.contains(ev.target)) {
+      child.classList.add("hidden");
+      document.removeEventListener("click", onClickOutside);
     }
-  }
+  };
 
-document.addEventListener("click",onClickOutside)
-  
+  document.addEventListener("click", onClickOutside);
 }
 
-function showModuleInput(e){
-  e.stopPropagation()
-  const parent=e.target.closest(".moduleP")
-  const child=parent.querySelector(".moduleC")
-  child.classList.remove("hidden")
-  document.body.classList.add("overflow-hidden")
-const removeModule=(ev)=>{
- if (ev.target.classList.contains("moduleC")) {
-   document.body.classList.remove("overflow-hidden");
-   child.classList.add("hidden");
-   parent.removeEventListener("click", removeModule);
- }
-  
+function showModuleInput(e) {
+  e.stopPropagation();
+  const parent = e.target.closest(".moduleP");
+  const child = parent.querySelector(".moduleC");
+  child.classList.remove("hidden");
+  document.body.classList.add("overflow-hidden");
+  const removeModule = (ev) => {
+    if (ev.target.classList.contains("moduleC")) {
+      parent.removeEventListener("click", removeModule);
+      document.body.classList.remove("overflow-hidden");
+      child.classList.add("hidden");
+    }
+  };
+  parent.addEventListener("click", removeModule);
 }
-parent.addEventListener("click",removeModule)
-}
-
-
-
-
-
-function filter(e){
-  const select=e.target
-  let selectValue= select.value
-
-}
-
-
-
-
 function handleSubmit(e) {
   e.preventDefault();
-
-  const formEl = e.target.closest('#form'); // مطمئن باشیم واقعا فرمِ فعلیه
+  const arrData = JSON.parse(localStorage.getItem("data")) || [];
+  
+  const formEl = e.target.closest("#form");
   const formData = new FormData(formEl);
   const entries = Object.fromEntries(formData.entries());
-  console.log(entries);
-
-  // validation
+  
+  
   for (const [key, val] of Object.entries(entries)) {
     if (!val.trim()) {
       alert(`فیلد ${key} نباید خالی باشد!`);
       return;
     }
   }
-  }
+  arrData.push(entries);
+  localStorage.setItem("data", JSON.stringify(arrData));
+
+
+   
+  
+  formEl.reset()
+ const parentModule = formEl.closest(".moduleP");
+ const modal = parentModule?.querySelector(".moduleC");
+ if (modal) {
+   modal.classList.add("hidden");
+ }
+
+ document.body.classList.remove("overflow-hidden");
+ document.documentElement.classList.remove("overflow-hidden");
+}
+
+
+function filter(e) {
+  const select = e.target;
+  let selectValue = select.value;
+}
