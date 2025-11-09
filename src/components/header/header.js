@@ -135,7 +135,7 @@ export function Header() {
                 element: "img",
                 src: "../../../public/assets/plus.svg",
                 alt: "plus",
-                eventListener: [{ event: "click", callback: showModuleInput }],
+                eventListener: [{ event: "click", callback:handelShowModal }],
               }),
               mould(),
             ],
@@ -149,7 +149,7 @@ function mould() {
   return El({
     element: "div",
     className:
-      "moduleC w-full h-screen bg-[#7926eda1] moduleC absolute top-0 left-0 hidden grid place-items-center ",
+      "moduleC w-full h-screen bg-[#7926eda1] moduleC absolute top-0 left-0 hidden grid place-items-center z-50 ",
     children: [
       El({
         element: "form",
@@ -311,7 +311,9 @@ function showModuleSearch(e) {
   document.addEventListener("click", onClickOutside);
 }
 
-function showModuleInput(e) {
+export function handelShowModal(e) {
+  //be parent add className moduleP
+  //be child add className moduleC 
   e.stopPropagation();
   const parent = e.target.closest(".moduleP");
   const child = parent.querySelector(".moduleC");

@@ -1,11 +1,12 @@
 import { El } from "../../utils/El";
+import { handelShowModal } from "../header/header";
 const arrColor = [
   { bgRed: "bg-[#dc3545]", bgTextWithe: "text-[#fcf8f7]" },
   { bgGray: "bg-[#ebebeb]", bgTextBlack: "text-[#28323f]" },
   { bgYellow: "bg-[#ffc107]", bgTextBorne: "text-[#2c2401]" },
   { bgGreen: "bg-[#2e7d32]", bgTextGreen: "text-[#f6f7eb]" },
 ];
-let arrData = JSON.parse(localStorage.getItem("data"));
+let arrData = JSON.parse(localStorage.getItem("data")) || [];
 let arrTasks = arrData.map((item, index) => ({
   id: index + 1,
   title: item.title,
@@ -51,22 +52,18 @@ let arrTasks = arrData.map((item, index) => ({
 //   },
 // ];
 // function
-export function Main(){
-  return El({element:"div",
-    id:"task-container",
-  })
-
+export function Main() {
+  return El({ element: "div", innerText: "loading...", id: "task-container" });
 }
 export function createTasks() {
-const taskContainer = document.getElementById("task-container");
-  taskContainer.innerText="loading...";
+  const taskContainer = document.getElementById("task-container");
 
-  let result= El({
+  let result = El({
     element: "div",
     eventListener: [
       {
         event: "click",
-        callback:handelBtnTask,
+        callback: handelBtnTask,
       },
     ],
     className:
@@ -100,7 +97,7 @@ const taskContainer = document.getElementById("task-container");
       ...ShowTasks(arrTasks),
     ],
   });
-  taskContainer.innerHTML=""
+  taskContainer.innerHTML = "";
   taskContainer.appendChild(result);
 }
 export function ShowTasks(arr) {
@@ -159,7 +156,7 @@ export function ShowTasks(arr) {
         }),
       ],
     }),
-    createAction(item.stats, item.id),
+    createAction(item),
   ]);
 }
 function priority(priority) {
@@ -200,11 +197,11 @@ function stats(stat) {
   }
   return result;
 }
-function createAction(stat, id1) {
+function createAction(obj) {
   return El({
     element: "div",
     className: `flex ${statsBg(
-      stat,
+      obj.stats,
       arrColor
     )} justify-center items-center gap-1.5 lg:bg-white`,
     children: [
@@ -216,8 +213,8 @@ function createAction(stat, id1) {
           El({
             element: "img",
             src: "../../../public/assets/bin.svg",
-            className:"btn-delete",
-            dataset: {id:id1},
+            className: "btn-delete",
+            dataset: { id: obj.id },
           }),
         ],
       }),
@@ -228,21 +225,24 @@ function createAction(stat, id1) {
           El({
             element: "img",
             src: "../../../public/assets/pen.svg",
-            className:"btn-pen",
-            dataset: {id:id1},
+            className: "btn-pen",
+
+            dataset: { id: obj.id },
           }),
         ],
       }),
       El({
         element: "div",
-        className: "bg-[#6c757d] p-2 rounded-md cursor-pointer",
+        className: "moduleP bg-[#6c757d] p-2 rounded-md cursor-pointer",
         children: [
           El({
             element: "img",
             src: "../../../public/assets/eye.svg",
-            className:"btn-eye",
-            dataset:{id:id1}
+            eventListener: [{ event: "click", callback: handelShowModal }],
+            className: "btn-eye",
+            dataset: { id: obj.id },
           }),
+          taskDetail(obj.title, obj.Deadline, obj.description),
         ],
       }),
     ],
@@ -276,11 +276,54 @@ function statsBg(stat, arr) {
   }
   return result;
 }
-function handelBtnTask(e){
-   if (e.target.classList.contains("btn-delete")) {
-     const id = Number(e.target.dataset.id)
-   
-     arrTasks = arrTasks.filter((item) => item.id !== id);
-     createTasks()
-   }
+function handelBtnTask(e) {
+  if (e.target.classList.contains("btn-delete")) {
+    const id = Number(e.target.dataset.id);
+
+    arrTasks = arrTasks.filter((item) => item.id !== id);
+    console.log(arrTasks);
+    createTasks();
+  }
+  if (e.target.classList.contains("btn-eye")) {
+    const id = Number(e.target.dataset.id);
+    let task = arrTasks.filter((item) => item.id === id);
+    taskDetail();
+  }
+}
+function taskDetail(title, date, detail) {
+  return El({
+    element: "div",
+    className:
+      "moduleC w-full h-screen bg-[#7926eda1] moduleC absolute top-0 left-0 hidden grid place-items-center z-50 ",
+    children: [
+      El({
+        element: "div",
+        className:
+          "w-[90%] bg-[#f0f0f0] border-4 gap-2 overflow-x-scroll border-[#6200ea] h-[80%] relative rounded-md flex flex-col lg:p-10 p-3",
+        children: [
+          El({
+            element: "div",
+            className: "flex w-full text-black border-b p-2",
+            children: [
+              El({
+                element: "div",
+                className: "flex-1",
+                children: [El({ element: "h2", innerText: title })],
+              }),
+              El({
+                element: "div",
+                className: "flex-1 text-black",
+                children: [El({ element: "p",
+                  className:"text-end sm:text-2xl text-md",
+                  innerText: date })],
+              }),
+            ],
+          }),
+          El({ element: "p",
+            className:"text-md text-black p-2"
+            , innerText: detail }),
+        ],
+      }),
+    ],
+  });
 }

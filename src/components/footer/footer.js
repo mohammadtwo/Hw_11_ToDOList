@@ -16,7 +16,7 @@ export function Footer() {
             element: "div",
             className: "flex justify-center items-center gap-2",
             innerText: "Rows per pages:",
-            children: [selectBox(arrShowRows, srcImgSelectBox, "hidden")],
+            children: [selectBox(arrShowRows, srcImgSelectBox,"hidden")],
           }),
         ],
       }),
@@ -54,7 +54,7 @@ function selectBox(arr, url, display = "grid", h = "30") {
       }),
       El({
         element: "div",
-        className: `absolute h-${h} lg:h-40   w-[250px] bg-[#6200ea] ${display}   place-items-center gap-2 p-4  overflow-y-auto top-full right-0 rounded-b-xl lg:w-[500px] `,
+        className: `absolute h-${h} lg:h-40  w-[250px] bg-[#6200ea] ${display}   place-items-center gap-2 p-4  overflow-y-auto bottom-full right-0 rounded-t-xl lg:w-[500px] `,
         children: arr.map((item) => {
           return El({
             element: "div",
